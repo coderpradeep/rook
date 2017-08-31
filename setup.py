@@ -85,6 +85,7 @@ setup(
         'sqlalchemy==1.2.2',
         'sqlalchemy-utils==0.32.21',
         'sqlparse==0.2.4',
+        'redis>=2.10.6',
         'thrift>=0.9.3',
         'thrift-sasl>=0.2.1',
         'unidecode>=0.04.21',
