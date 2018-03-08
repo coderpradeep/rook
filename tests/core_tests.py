@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset"""
+"""Unit tests for Rook"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -22,15 +22,15 @@ import psycopg2
 from six import text_type
 import sqlalchemy as sqla
 
-from superset import appbuilder, dataframe, db, jinja_context, sm, sql_lab, utils
-from superset.connectors.sqla.models import SqlaTable
-from superset.models import core as models
-from superset.models.sql_lab import Query
-from superset.views.core import DatabaseView
-from .base_tests import SupersetTestCase
+from rook import appbuilder, dataframe, db, jinja_context, sm, sql_lab, utils
+from rook.connectors.sqla.models import SqlaTable
+from rook.models import core as models
+from rook.models.sql_lab import Query
+from rook.views.core import DatabaseView
+from .base_tests import RookTestCase
 
 
-class CoreTests(SupersetTestCase):
+class CoreTests(RookTestCase):
 
     requires_examples = True
 
@@ -70,19 +70,19 @@ class CoreTests(SupersetTestCase):
 
     def test_welcome(self):
         self.login()
-        resp = self.client.get('/superset/welcome')
+        resp = self.client.get('/rook/welcome')
         assert 'Welcome' in resp.data.decode('utf-8')
 
     def test_slice_endpoint(self):
         self.login(username='admin')
         slc = self.get_slice('Girls', db.session)
-        resp = self.get_resp('/superset/slice/{}/'.format(slc.id))
+        resp = self.get_resp('/rook/slice/{}/'.format(slc.id))
         assert 'Time Column' in resp
         assert 'List Roles' in resp
 
         # Testing overrides
         resp = self.get_resp(
-            '/superset/slice/{}/?standalone=true'.format(slc.id))
+            '/rook/slice/{}/?standalone=true'.format(slc.id))
         assert 'List Roles' not in resp
 
     def test_cache_key(self):
@@ -102,7 +102,7 @@ class CoreTests(SupersetTestCase):
         slc = self.get_slice('Girls', db.session)
 
         json_endpoint = (
-            '/superset/explore_json/{}/{}/'
+            '/rook/explore_json/{}/{}/'
             .format(slc.datasource_type, slc.datasource_id)
         )
         resp = self.get_resp(json_endpoint, {'form_data': json.dumps(slc.viz.form_data)})
@@ -119,7 +119,7 @@ class CoreTests(SupersetTestCase):
         slc = self.get_slice('Girls', db.session)
 
         csv_endpoint = (
-            '/superset/explore_json/{}/{}/?csv=true'
+            '/rook/explore_json/{}/{}/?csv=true'
             .format(slc.datasource_type, slc.datasource_id)
         )
         resp = self.get_resp(csv_endpoint, {'form_data': json.dumps(slc.viz.form_data)})
@@ -129,7 +129,7 @@ class CoreTests(SupersetTestCase):
         self.login(username='admin')
         slc = self.get_slice('Girls', db.session)
 
-        csv_endpoint = '/superset/explore_json/?csv=true'
+        csv_endpoint = '/rook/explore_json/?csv=true'
         resp = self.get_resp(
             csv_endpoint, {'form_data': json.dumps({'slice_id': slc.id})})
         assert 'Jennifer,' in resp
@@ -170,7 +170,7 @@ class CoreTests(SupersetTestCase):
         new_slice_name = 'Test Sankey Overwirte'
 
         url = (
-            '/superset/explore/table/{}/?slice_name={}&'
+            '/rook/explore/table/{}/?slice_name={}&'
             'action={}&datasource_name=energy_usage')
 
         form_data = {
@@ -223,7 +223,7 @@ class CoreTests(SupersetTestCase):
         table = db.session.query(SqlaTable).filter(SqlaTable.id == tbl_id)
         table.filter_select_enabled = True
         url = (
-            '/superset/filter/table/{}/target/?viz_type=sankey&groupby=source'
+            '/rook/filter/table/{}/target/?viz_type=sankey&groupby=source'
             '&metric=sum__value&flt_col_0=source&flt_op_0=in&flt_eq_0=&'
             'slice_id={}&datasource_name=energy_usage&'
             'datasource_id=1&datasource_type=table')
@@ -256,7 +256,7 @@ class CoreTests(SupersetTestCase):
         # assert that a table is listed
         table = db.session.query(SqlaTable).first()
         assert table.name in resp
-        assert '/superset/explore/table/{}'.format(table.id) in resp
+        assert '/rook/explore/table/{}'.format(table.id) in resp
 
     def test_add_slice(self):
         self.login(username='admin')
@@ -324,7 +324,7 @@ class CoreTests(SupersetTestCase):
             'impersonate_user': False,
         })
         response = self.client.post(
-            '/superset/testconn',
+            '/rook/testconn',
             data=data,
             content_type='application/json')
         assert response.status_code == 200
@@ -337,7 +337,7 @@ class CoreTests(SupersetTestCase):
             'impersonate_user': False,
         })
         response = self.client.post(
-            '/superset/testconn',
+            '/rook/testconn',
             data=data,
             content_type='application/json')
         assert response.status_code == 200
@@ -374,17 +374,17 @@ class CoreTests(SupersetTestCase):
     def test_warm_up_cache(self):
         slc = self.get_slice('Girls', db.session)
         data = self.get_json_resp(
-            '/superset/warm_up_cache?slice_id={}'.format(slc.id))
+            '/rook/warm_up_cache?slice_id={}'.format(slc.id))
         assert data == [{'slice_id': slc.id, 'slice_name': slc.slice_name}]
 
         data = self.get_json_resp(
-            '/superset/warm_up_cache?table_name=energy_usage&db_name=main')
+            '/rook/warm_up_cache?table_name=energy_usage&db_name=main')
         assert len(data) == 3
 
     def test_shortner(self):
         self.login(username='admin')
         data = (
-            '//superset/explore/table/1/?viz_type=sankey&groupby=source&'
+            '//rook/explore/table/1/?viz_type=sankey&groupby=source&'
             'groupby=target&metric=sum__value&row_limit=5000&where=&having=&'
             'flt_col_0=source&flt_op_0=in&flt_eq_0=&slice_id=78&slice_name='
             'Energy+Sankey&collapsed_fieldsets=&action=&datasource_name='
@@ -440,7 +440,7 @@ class CoreTests(SupersetTestCase):
             'positions': positions,
             'dashboard_title': dash.dashboard_title,
         }
-        url = '/superset/save_dash/{}/'.format(dash.id)
+        url = '/rook/save_dash/{}/'.format(dash.id)
         resp = self.get_resp(url, data=dict(data=json.dumps(data)))
         self.assertIn('SUCCESS', resp)
 
@@ -468,7 +468,7 @@ class CoreTests(SupersetTestCase):
             'default_filters': default_filters,
         }
 
-        url = '/superset/save_dash/{}/'.format(dash.id)
+        url = '/rook/save_dash/{}/'.format(dash.id)
         resp = self.get_resp(url, data=dict(data=json.dumps(data)))
         self.assertIn('SUCCESS', resp)
 
@@ -503,7 +503,7 @@ class CoreTests(SupersetTestCase):
             'positions': positions,
             'dashboard_title': 'new title',
         }
-        url = '/superset/save_dash/{}/'.format(dash.id)
+        url = '/rook/save_dash/{}/'.format(dash.id)
         self.get_resp(url, data=dict(data=json.dumps(data)))
         updatedDash = (
             db.session.query(models.Dashboard)
@@ -538,14 +538,14 @@ class CoreTests(SupersetTestCase):
 
         # Save changes to Births dashboard and retrieve updated dash
         dash_id = dash.id
-        url = '/superset/save_dash/{}/'.format(dash_id)
+        url = '/rook/save_dash/{}/'.format(dash_id)
         self.client.post(url, data=dict(data=json.dumps(data)))
         dash = db.session.query(models.Dashboard).filter_by(
             id=dash_id).first()
         orig_json_data = dash.data
 
         # Verify that copy matches original
-        url = '/superset/copy_dash/{}/'.format(dash_id)
+        url = '/rook/copy_dash/{}/'.format(dash_id)
         resp = self.get_json_resp(url, data=dict(data=json.dumps(data)))
         self.assertEqual(resp['dashboard_title'], 'Copy Of Births')
         self.assertEqual(resp['position_json'], orig_json_data['position_json'])
@@ -564,7 +564,7 @@ class CoreTests(SupersetTestCase):
             'slice_ids': [new_slice.data['slice_id'],
                           existing_slice.data['slice_id']],
         }
-        url = '/superset/add_slices/{}/'.format(dash.id)
+        url = '/rook/add_slices/{}/'.format(dash.id)
         resp = self.client.post(url, data=dict(data=json.dumps(data)))
         assert 'SLICES ADDED' in resp.data.decode('utf-8')
 
@@ -597,7 +597,7 @@ class CoreTests(SupersetTestCase):
         client_id = '{}'.format(random.getrandbits(64))[:10]
         self.run_sql(sql, client_id, raise_on_error=True)
 
-        resp = self.get_resp('/superset/csv/{}'.format(client_id))
+        resp = self.get_resp('/rook/csv/{}'.format(client_id))
         data = csv.reader(io.StringIO(resp))
         expected_data = csv.reader(
             io.StringIO('first_name,last_name\nadmin, user\n'))
@@ -620,7 +620,7 @@ class CoreTests(SupersetTestCase):
         self.assertNotIn('birth_names</a>', resp)
 
         resp = self.get_resp('/dashboardmodelview/list/')
-        self.assertNotIn('/superset/dashboard/births/', resp)
+        self.assertNotIn('/rook/dashboard/births/', resp)
 
         self.grant_public_access_to_table(table)
 
@@ -628,16 +628,16 @@ class CoreTests(SupersetTestCase):
         self.assertIn('birth_names', self.get_resp('/slicemodelview/list/'))
 
         resp = self.get_resp('/dashboardmodelview/list/')
-        self.assertIn('/superset/dashboard/births/', resp)
+        self.assertIn('/rook/dashboard/births/', resp)
 
-        self.assertIn('Births', self.get_resp('/superset/dashboard/births/'))
+        self.assertIn('Births', self.get_resp('/rook/dashboard/births/'))
 
         # Confirm that public doesn't have access to other datasets.
         resp = self.get_resp('/slicemodelview/list/')
         self.assertNotIn('wb_health_population</a>', resp)
 
         resp = self.get_resp('/dashboardmodelview/list/')
-        self.assertNotIn('/superset/dashboard/world_health/', resp)
+        self.assertNotIn('/rook/dashboard/world_health/', resp)
 
     def test_dashboard_with_created_by_can_be_accessed_by_public_users(self):
         self.logout()
@@ -656,7 +656,7 @@ class CoreTests(SupersetTestCase):
         db.session.merge(dash)
         db.session.commit()
 
-        assert 'Births' in self.get_resp('/superset/dashboard/births/')
+        assert 'Births' in self.get_resp('/rook/dashboard/births/')
 
     def test_only_owners_can_save(self):
         dash = (
@@ -691,7 +691,7 @@ class CoreTests(SupersetTestCase):
         self.login('admin')
         dbid = self.get_main_database(db.session).id
         self.get_json_resp(
-            '/superset/extra_table_metadata/{dbid}/'
+            '/rook/extra_table_metadata/{dbid}/'
             'ab_permission_view/panoramix/'.format(**locals()))
 
     def test_process_template(self):
@@ -725,7 +725,7 @@ class CoreTests(SupersetTestCase):
         maindb = self.get_main_database(db.session)
         backend = maindb.backend
         data = self.get_json_resp(
-            '/superset/table/{}/ab_user/null/'.format(maindb.id))
+            '/rook/table/{}/ab_user/null/'.format(maindb.id))
         self.assertEqual(data['name'], 'ab_user')
         assert len(data['columns']) > 5
         assert data.get('selectStar').startswith('SELECT')
@@ -744,7 +744,7 @@ class CoreTests(SupersetTestCase):
     def test_fetch_datasource_metadata(self):
         self.login(username='admin')
         url = (
-            '/superset/fetch_datasource_metadata?' +
+            '/rook/fetch_datasource_metadata?' +
             'datasourceKey=1__table'
         )
         resp = self.get_json_resp(url)
@@ -761,7 +761,7 @@ class CoreTests(SupersetTestCase):
         slc = self.get_slice('Girls', db.session)
 
         # Setting some faves
-        url = '/superset/favstar/Slice/{}/select/'.format(slc.id)
+        url = '/rook/favstar/Slice/{}/select/'.format(slc.id)
         resp = self.get_json_resp(url)
         self.assertEqual(resp['count'], 1)
 
@@ -771,36 +771,36 @@ class CoreTests(SupersetTestCase):
             .filter_by(slug='births')
             .first()
         )
-        url = '/superset/favstar/Dashboard/{}/select/'.format(dash.id)
+        url = '/rook/favstar/Dashboard/{}/select/'.format(dash.id)
         resp = self.get_json_resp(url)
         self.assertEqual(resp['count'], 1)
 
         userid = appbuilder.sm.find_user('admin').id
-        resp = self.get_resp('/superset/profile/admin/')
+        resp = self.get_resp('/rook/profile/admin/')
         self.assertIn('"app"', resp)
-        data = self.get_json_resp('/superset/recent_activity/{}/'.format(userid))
+        data = self.get_json_resp('/rook/recent_activity/{}/'.format(userid))
         self.assertNotIn('message', data)
-        data = self.get_json_resp('/superset/created_slices/{}/'.format(userid))
+        data = self.get_json_resp('/rook/created_slices/{}/'.format(userid))
         self.assertNotIn('message', data)
-        data = self.get_json_resp('/superset/created_dashboards/{}/'.format(userid))
+        data = self.get_json_resp('/rook/created_dashboards/{}/'.format(userid))
         self.assertNotIn('message', data)
-        data = self.get_json_resp('/superset/fave_slices/{}/'.format(userid))
+        data = self.get_json_resp('/rook/fave_slices/{}/'.format(userid))
         self.assertNotIn('message', data)
-        data = self.get_json_resp('/superset/fave_dashboards/{}/'.format(userid))
+        data = self.get_json_resp('/rook/fave_dashboards/{}/'.format(userid))
         self.assertNotIn('message', data)
         data = self.get_json_resp(
-            '/superset/fave_dashboards_by_username/{}/'.format(username))
+            '/rook/fave_dashboards_by_username/{}/'.format(username))
         self.assertNotIn('message', data)
 
     def test_slice_id_is_always_logged_correctly_on_web_request(self):
-        # superset/explore case
+        # rook/explore case
         slc = db.session.query(models.Slice).filter_by(slice_name='Girls').one()
         qry = db.session.query(models.Log).filter_by(slice_id=slc.id)
         self.get_resp(slc.slice_url, {'form_data': json.dumps(slc.viz.form_data)})
         self.assertEqual(1, qry.count())
 
     def test_slice_id_is_always_logged_correctly_on_ajax_request(self):
-        # superset/explore_json case
+        # rook/explore_json case
         self.login(username='admin')
         slc = db.session.query(models.Slice).filter_by(slice_name='Girls').one()
         qry = db.session.query(models.Log).filter_by(slice_id=slc.id)
@@ -812,7 +812,7 @@ class CoreTests(SupersetTestCase):
         # API endpoint for query string
         self.login(username='admin')
         slc = self.get_slice('Girls', db.session)
-        resp = self.get_resp('/superset/slice_query/{}/'.format(slc.id))
+        resp = self.get_resp('/rook/slice_query/{}/'.format(slc.id))
         assert 'query' in resp
         assert 'language' in resp
         self.logout()
@@ -875,7 +875,7 @@ class CoreTests(SupersetTestCase):
             (datetime.datetime(2017, 11, 18, 21, 53, 0, 219225, tzinfo=tz),),
             (datetime.datetime(2017, 11, 18, 22, 6, 30, 61810, tzinfo=tz),),
         ]
-        df = dataframe.SupersetDataFrame(pd.DataFrame(data=list(data),
+        df = dataframe.RookDataFrame(pd.DataFrame(data=list(data),
                                                       columns=['data']))
         data = df.data
         self.assertDictEqual(
@@ -904,7 +904,7 @@ class CoreTests(SupersetTestCase):
 
         # Overriding groupby
         url = slc.get_explore_url(
-            base_url='/superset/explore_json',
+            base_url='/rook/explore_json',
             overrides={'groupby': ['state']})
         resp = self.get_resp(url)
         assert '"CA"' in resp
@@ -914,7 +914,7 @@ class CoreTests(SupersetTestCase):
         slc = self.get_slice('Girls', db.session)
 
         url = slc.get_explore_url(
-            base_url='/superset/explore_json',
+            base_url='/rook/explore_json',
             overrides={
                 'filters': [{'col': 'state', 'op': 'in', 'val': ['N/A']}],
             },
@@ -929,7 +929,7 @@ class CoreTests(SupersetTestCase):
         slc = self.get_slice('Girls', db.session)
 
         url = slc.get_explore_url(
-            base_url='/superset/explore_json',
+            base_url='/rook/explore_json',
             overrides={'groupby': ['N/A']},
         )
 
@@ -941,7 +941,7 @@ class CoreTests(SupersetTestCase):
         self.login(username='admin')
         slc = self.get_slice('Title', db.session)
 
-        url = slc.get_explore_url(base_url='/superset/explore_json')
+        url = slc.get_explore_url(base_url='/rook/explore_json')
         data = self.get_json_resp(url)
         self.assertEqual(data['status'], None)
         self.assertEqual(data['error'], None)

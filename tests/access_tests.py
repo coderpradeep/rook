@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset"""
+"""Unit tests for Rook"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -10,12 +10,12 @@ import unittest
 
 import mock
 
-from superset import app, db, security, sm
-from superset.connectors.connector_registry import ConnectorRegistry
-from superset.connectors.druid.models import DruidDatasource
-from superset.connectors.sqla.models import SqlaTable
-from superset.models import core as models
-from .base_tests import SupersetTestCase
+from rook import app, db, security, sm
+from rook.connectors.connector_registry import ConnectorRegistry
+from rook.connectors.druid.models import DruidDatasource
+from rook.connectors.sqla.models import SqlaTable
+from rook.models import core as models
+from .base_tests import RookTestCase
 
 ROLE_TABLES_PERM_DATA = {
     'role_name': 'override_me',
@@ -50,10 +50,10 @@ ROLE_ALL_PERM_DATA = {
 }
 
 EXTEND_ROLE_REQUEST = (
-    '/superset/approve?datasource_type={}&datasource_id={}&'
+    '/rook/approve?datasource_type={}&datasource_id={}&'
     'created_by={}&role_to_extend={}')
 GRANT_ROLE_REQUEST = (
-    '/superset/approve?datasource_type={}&datasource_id={}&'
+    '/rook/approve?datasource_type={}&datasource_id={}&'
     'created_by={}&role_to_grant={}')
 TEST_ROLE_1 = 'test_role1'
 TEST_ROLE_2 = 'test_role2'
@@ -83,7 +83,7 @@ def create_access_request(session, ds_type, ds_name, role_name, user_name):
     return access_request
 
 
-class RequestAccessTests(SupersetTestCase):
+class RequestAccessTests(RookTestCase):
 
     requires_examples = False
 
@@ -120,7 +120,7 @@ class RequestAccessTests(SupersetTestCase):
         self.logout()
         self.login('alpha')
         response = self.client.post(
-            '/superset/override_role_permissions/',
+            '/rook/override_role_permissions/',
             data=json.dumps(ROLE_TABLES_PERM_DATA),
             content_type='application/json',
             follow_redirects=True)
@@ -128,7 +128,7 @@ class RequestAccessTests(SupersetTestCase):
 
     def test_override_role_permissions_1_table(self):
         response = self.client.post(
-            '/superset/override_role_permissions/',
+            '/rook/override_role_permissions/',
             data=json.dumps(ROLE_TABLES_PERM_DATA),
             content_type='application/json')
         self.assertEquals(201, response.status_code)
@@ -145,7 +145,7 @@ class RequestAccessTests(SupersetTestCase):
 
     def test_override_role_permissions_druid_and_table(self):
         response = self.client.post(
-            '/superset/override_role_permissions/',
+            '/rook/override_role_permissions/',
             data=json.dumps(ROLE_ALL_PERM_DATA),
             content_type='application/json')
         self.assertEquals(201, response.status_code)
@@ -178,7 +178,7 @@ class RequestAccessTests(SupersetTestCase):
         db.session.flush()
 
         response = self.client.post(
-            '/superset/override_role_permissions/',
+            '/rook/override_role_permissions/',
             data=json.dumps(ROLE_TABLES_PERM_DATA),
             content_type='application/json')
         self.assertEquals(201, response.status_code)
@@ -324,7 +324,7 @@ class RequestAccessTests(SupersetTestCase):
 
         session.commit()
 
-    @mock.patch('superset.utils.send_MIME_email')
+    @mock.patch('rook.utils.send_MIME_email')
     def test_approve(self, mock_send_mime):
         if app.config.get('ENABLE_ACCESS_REQUEST'):
             session = db.session
@@ -345,7 +345,7 @@ class RequestAccessTests(SupersetTestCase):
                               sm.find_user(username='admin').email],
                              call_args[1])
             self.assertEqual(
-                '[Superset] Access to the datasource {} was granted'.format(
+                '[Rook] Access to the datasource {} was granted'.format(
                     self.get_table(ds_1_id).full_name), call_args[2]['Subject'])
             self.assertIn(TEST_ROLE_NAME, call_args[2].as_string())
             self.assertIn('unicode_test', call_args[2].as_string())
@@ -375,7 +375,7 @@ class RequestAccessTests(SupersetTestCase):
                               sm.find_user(username='admin').email],
                              call_args[1])
             self.assertEqual(
-                '[Superset] Access to the datasource {} was granted'.format(
+                '[Rook] Access to the datasource {} was granted'.format(
                     self.get_table(ds_2_id).full_name), call_args[2]['Subject'])
             self.assertIn(TEST_ROLE_NAME, call_args[2].as_string())
             self.assertIn('long_lat', call_args[2].as_string())
@@ -433,12 +433,12 @@ class RequestAccessTests(SupersetTestCase):
             session.commit()
 
             ACCESS_REQUEST = (
-                '/superset/request_access?'
+                '/rook/request_access?'
                 'datasource_type={}&'
                 'datasource_id={}&'
                 'action={}&')
             ROLE_GRANT_LINK = (
-                '<a href="/superset/approve?datasource_type={}&datasource_id={}&'
+                '<a href="/rook/approve?datasource_type={}&datasource_id={}&'
                 'created_by={}&role_to_grant={}">Grant {} Role</a>')
 
             # Request table access, there are no roles have this table.

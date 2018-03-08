@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset"""
+"""Unit tests for Rook"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -12,18 +12,18 @@ import unittest
 
 from flask_appbuilder.security.sqla import models as ab_models
 
-from superset import app, appbuilder, cli, db, security, sm
-from superset.connectors.druid.models import DruidCluster, DruidDatasource
-from superset.connectors.sqla.models import SqlaTable
-from superset.models import core as models
-from superset.security import sync_role_definitions
+from rook import app, appbuilder, cli, db, security, sm
+from rook.connectors.druid.models import DruidCluster, DruidDatasource
+from rook.connectors.sqla.models import SqlaTable
+from rook.models import core as models
+from rook.security import sync_role_definitions
 
-os.environ['SUPERSET_CONFIG'] = 'tests.superset_test_config'
+os.environ['SUPERSET_CONFIG'] = 'tests.rook_test_config'
 
 BASE_DIR = app.config.get('BASE_DIR')
 
 
-class SupersetTestCase(unittest.TestCase):
+class RookTestCase(unittest.TestCase):
     requires_examples = False
     examples_loaded = False
 
@@ -40,7 +40,7 @@ class SupersetTestCase(unittest.TestCase):
             os.environ['examples_loaded'] = '1'
         else:
             sync_role_definitions()
-        super(SupersetTestCase, self).__init__(*args, **kwargs)
+        super(RookTestCase, self).__init__(*args, **kwargs)
         self.client = app.test_client()
         self.maxDiff = None
 
@@ -209,7 +209,7 @@ class SupersetTestCase(unittest.TestCase):
             self.login(username=(user_name if user_name else 'admin'))
         dbid = self.get_main_database(db.session).id
         resp = self.get_json_resp(
-            '/superset/sql_json/',
+            '/rook/sql_json/',
             raise_on_error=False,
             data=dict(database_id=dbid, sql=sql, select_as_create_as=False,
                       client_id=client_id),
@@ -252,16 +252,16 @@ class SupersetTestCase(unittest.TestCase):
         assert_can_all('SliceModelView')
         assert_can_all('DashboardModelView')
 
-        self.assertIn(('can_add_slices', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_copy_dash', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_activity_per_day', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_created_dashboards', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_created_slices', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_csv', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_dashboard', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_explore', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_explore_json', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_fave_dashboards', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_fave_slices', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_save_dash', 'Superset'), gamma_perm_set)
-        self.assertIn(('can_slice', 'Superset'), gamma_perm_set)
+        self.assertIn(('can_add_slices', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_copy_dash', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_activity_per_day', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_created_dashboards', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_created_slices', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_csv', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_dashboard', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_explore', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_explore_json', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_fave_dashboards', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_fave_slices', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_save_dash', 'Rook'), gamma_perm_set)
+        self.assertIn(('can_slice', 'Rook'), gamma_perm_set)

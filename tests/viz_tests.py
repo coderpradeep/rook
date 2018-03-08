@@ -10,8 +10,8 @@ import unittest
 from mock import Mock, patch
 import pandas as pd
 
-from superset.utils import DTTM_ALIAS
-import superset.viz as viz
+from rook.utils import DTTM_ALIAS
+import rook.viz as viz
 
 
 class BaseVizTestCase(unittest.TestCase):
@@ -160,7 +160,7 @@ class TableVizTestCase(unittest.TestCase):
         ]
         self.assertEqual(expected, data['records'])
 
-    @patch('superset.viz.BaseViz.query_obj')
+    @patch('rook.viz.BaseViz.query_obj')
     def test_query_obj_merges_percent_metrics(self, super_query_obj):
         datasource = Mock()
         form_data = {
@@ -178,7 +178,7 @@ class TableVizTestCase(unittest.TestCase):
             'avg__B', 'max__Y',
         ], query_obj['metrics'])
 
-    @patch('superset.viz.BaseViz.query_obj')
+    @patch('rook.viz.BaseViz.query_obj')
     def test_query_obj_throws_columns_and_metrics(self, super_query_obj):
         datasource = Mock()
         form_data = {
@@ -195,7 +195,7 @@ class TableVizTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             test_viz.query_obj()
 
-    @patch('superset.viz.BaseViz.query_obj')
+    @patch('rook.viz.BaseViz.query_obj')
     def test_query_obj_merges_all_columns(self, super_query_obj):
         datasource = Mock()
         form_data = {
@@ -212,7 +212,7 @@ class TableVizTestCase(unittest.TestCase):
         self.assertEqual([], query_obj['groupby'])
         self.assertEqual([['colA', 'colB'], ['colC']], query_obj['orderby'])
 
-    @patch('superset.viz.BaseViz.query_obj')
+    @patch('rook.viz.BaseViz.query_obj')
     def test_query_obj_uses_sortby(self, super_query_obj):
         datasource = Mock()
         form_data = {
@@ -373,7 +373,7 @@ class PairedTTestTestCase(unittest.TestCase):
 
 class PartitionVizTestCase(unittest.TestCase):
 
-    @patch('superset.viz.BaseViz.query_obj')
+    @patch('rook.viz.BaseViz.query_obj')
     def test_query_obj_time_series_option(self, super_query_obj):
         datasource = Mock()
         form_data = {}

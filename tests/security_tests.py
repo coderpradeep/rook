@@ -4,8 +4,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from superset import app, security, sm
-from .base_tests import SupersetTestCase
+from rook import app, security, sm
+from .base_tests import RookTestCase
 
 
 def get_perm_tuples(role_name):
@@ -15,7 +15,7 @@ def get_perm_tuples(role_name):
     return perm_set
 
 
-class RolePermissionTests(SupersetTestCase):
+class RolePermissionTests(RookTestCase):
     """Testing export import functionality for dashboards"""
 
     def __init__(self, *args, **kwargs):
@@ -53,21 +53,21 @@ class RolePermissionTests(SupersetTestCase):
         self.assert_can_all('SliceModelView', perm_set)
         self.assert_can_all('DashboardModelView', perm_set)
 
-        self.assertIn(('can_add_slices', 'Superset'), perm_set)
-        self.assertIn(('can_copy_dash', 'Superset'), perm_set)
-        self.assertIn(('can_activity_per_day', 'Superset'), perm_set)
-        self.assertIn(('can_created_dashboards', 'Superset'), perm_set)
-        self.assertIn(('can_created_slices', 'Superset'), perm_set)
-        self.assertIn(('can_csv', 'Superset'), perm_set)
-        self.assertIn(('can_dashboard', 'Superset'), perm_set)
-        self.assertIn(('can_explore', 'Superset'), perm_set)
-        self.assertIn(('can_explore_json', 'Superset'), perm_set)
-        self.assertIn(('can_fave_dashboards', 'Superset'), perm_set)
-        self.assertIn(('can_fave_slices', 'Superset'), perm_set)
-        self.assertIn(('can_save_dash', 'Superset'), perm_set)
-        self.assertIn(('can_slice', 'Superset'), perm_set)
-        self.assertIn(('can_explore', 'Superset'), perm_set)
-        self.assertIn(('can_explore_json', 'Superset'), perm_set)
+        self.assertIn(('can_add_slices', 'Rook'), perm_set)
+        self.assertIn(('can_copy_dash', 'Rook'), perm_set)
+        self.assertIn(('can_activity_per_day', 'Rook'), perm_set)
+        self.assertIn(('can_created_dashboards', 'Rook'), perm_set)
+        self.assertIn(('can_created_slices', 'Rook'), perm_set)
+        self.assertIn(('can_csv', 'Rook'), perm_set)
+        self.assertIn(('can_dashboard', 'Rook'), perm_set)
+        self.assertIn(('can_explore', 'Rook'), perm_set)
+        self.assertIn(('can_explore_json', 'Rook'), perm_set)
+        self.assertIn(('can_fave_dashboards', 'Rook'), perm_set)
+        self.assertIn(('can_fave_slices', 'Rook'), perm_set)
+        self.assertIn(('can_save_dash', 'Rook'), perm_set)
+        self.assertIn(('can_slice', 'Rook'), perm_set)
+        self.assertIn(('can_explore', 'Rook'), perm_set)
+        self.assertIn(('can_explore_json', 'Rook'), perm_set)
 
     def assert_can_alpha(self, perm_set):
         self.assert_can_all('SqlMetricInlineView', perm_set)
@@ -97,10 +97,10 @@ class RolePermissionTests(SupersetTestCase):
         self.assert_can_all('UserDBModelView', perm_set)
 
         self.assertIn(('all_database_access', 'all_database_access'), perm_set)
-        self.assertIn(('can_override_role_permissions', 'Superset'), perm_set)
-        self.assertIn(('can_sync_druid_source', 'Superset'), perm_set)
-        self.assertIn(('can_override_role_permissions', 'Superset'), perm_set)
-        self.assertIn(('can_approve', 'Superset'), perm_set)
+        self.assertIn(('can_override_role_permissions', 'Rook'), perm_set)
+        self.assertIn(('can_sync_druid_source', 'Rook'), perm_set)
+        self.assertIn(('can_override_role_permissions', 'Rook'), perm_set)
+        self.assertIn(('can_approve', 'Rook'), perm_set)
 
     def test_is_admin_only(self):
         self.assertFalse(security.is_admin_only(
@@ -120,7 +120,7 @@ class RolePermissionTests(SupersetTestCase):
                 'can_edit', 'UserDBModelView')))
         self.assertTrue(security.is_admin_only(
             sm.find_permission_view_menu(
-                'can_approve', 'Superset')))
+                'can_approve', 'Rook')))
         self.assertTrue(security.is_admin_only(
             sm.find_permission_view_menu(
                 'all_database_access', 'all_database_access')))
@@ -161,17 +161,17 @@ class RolePermissionTests(SupersetTestCase):
 
     def test_sql_lab_permissions(self):
         sql_lab_set = get_perm_tuples('sql_lab')
-        self.assertIn(('can_sql_json', 'Superset'), sql_lab_set)
-        self.assertIn(('can_csv', 'Superset'), sql_lab_set)
-        self.assertIn(('can_search_queries', 'Superset'), sql_lab_set)
+        self.assertIn(('can_sql_json', 'Rook'), sql_lab_set)
+        self.assertIn(('can_csv', 'Rook'), sql_lab_set)
+        self.assertIn(('can_search_queries', 'Rook'), sql_lab_set)
 
         self.assert_cannot_gamma(sql_lab_set)
         self.assert_cannot_alpha(sql_lab_set)
 
     def test_granter_permissions(self):
         granter_set = get_perm_tuples('granter')
-        self.assertIn(('can_override_role_permissions', 'Superset'), granter_set)
-        self.assertIn(('can_approve', 'Superset'), granter_set)
+        self.assertIn(('can_override_role_permissions', 'Rook'), granter_set)
+        self.assertIn(('can_approve', 'Rook'), granter_set)
 
         self.assert_cannot_gamma(granter_set)
         self.assert_cannot_alpha(granter_set)

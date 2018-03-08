@@ -1,6 +1,6 @@
 # first bump up package.json manually, commit and tag
-rm superset/assets/dist/*
-cd superset/assets/
+rm rook/assets/dist/*
+cd rook/assets/
 npm run build
 cd ../..
 python setup.py sdist upload

@@ -8,7 +8,7 @@ import unittest
 
 from sqlalchemy.engine.url import make_url
 
-from superset.models.core import Database
+from rook.models.core import Database
 
 
 class DatabaseModelTestCase(unittest.TestCase):
@@ -52,11 +52,11 @@ class DatabaseModelTestCase(unittest.TestCase):
         self.assertEquals('core_db', db)
 
     def test_database_schema_mysql(self):
-        sqlalchemy_uri = 'mysql://root@localhost/superset'
+        sqlalchemy_uri = 'mysql://root@localhost/rook'
         model = Database(sqlalchemy_uri=sqlalchemy_uri)
 
         db = make_url(model.get_sqla_engine().url).database
-        self.assertEquals('superset', db)
+        self.assertEquals('rook', db)
 
         db = make_url(model.get_sqla_engine(schema='staging').url).database
         self.assertEquals('staging', db)

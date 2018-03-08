@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-from superset.db_engine_specs import HiveEngineSpec
+from rook.db_engine_specs import HiveEngineSpec
 
 
 class DbEngineSpecsTestCase(unittest.TestCase):

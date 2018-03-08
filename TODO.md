@@ -1,5 +1,5 @@
 # TODO
-List of TODO items for Superset
+List of TODO items for Rook
 
 ## Important
 * **Getting proper JS testing:** unit tests on the Python side are pretty
@@ -7,7 +7,7 @@ List of TODO items for Superset
     testing all the ajax-type calls
 * **Viz Plugins:** Allow people to define and share visualization plugins.
     ideally one would only need to drop in a set of files in a folder and
-    Superset would discover and expose the plugins
+    Rook would discover and expose the plugins
 
 ## Features
 * **Dashboard URL filters:** `{dash_url}#fltin__fieldname__value1,value2`

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 echo $DB
-rm ~/.superset/unittests.db
-rm ~/.superset/celerydb.sqlite
-rm ~/.superset/celery_results.sqlite
+rm ~/.rook/unittests.db
+rm ~/.rook/celerydb.sqlite
+rm ~/.rook/celery_results.sqlite
 rm -f .coverage
 export PYTHONPATH=./
-export SUPERSET_CONFIG=tests.superset_test_config
+export SUPERSET_CONFIG=tests.rook_test_config
 set -e
-superset/bin/superset db upgrade
-superset/bin/superset version -v
+rook/bin/rook db upgrade
+rook/bin/rook version -v
 python setup.py nosetests

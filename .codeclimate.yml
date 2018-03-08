@@ -11,7 +11,7 @@ engines:
       import/no-extraneous-dependencies:
         enabled: false
     config:
-      config: superset/assets/.eslintrc
+      config: rook/assets/.eslintrc
   pep8:
     enabled: true
   fixme:
@@ -24,17 +24,17 @@ engines:
 ratings:
   paths:
   - "**.py"
-  - "superset/assets/**.js"
-  - "superset/assets/**.jsx"
+  - "rook/assets/**.js"
+  - "rook/assets/**.jsx"
 exclude_paths:
 - ".*"
 - "**.pyc"
 - "**.gz"
 - "env/"
 - "tests/"
-- "superset/assets/images/"
-- "superset/assets/vendor/"
-- "superset/assets/node_modules/"
-- "superset/assets/javascripts/dist/"
-- "superset/migrations"
+- "rook/assets/images/"
+- "rook/assets/vendor/"
+- "rook/assets/node_modules/"
+- "rook/assets/javascripts/dist/"
+- "rook/migrations"
 - "docs/"

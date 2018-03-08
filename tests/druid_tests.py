@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset"""
+"""Unit tests for Rook"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -11,11 +11,11 @@ import unittest
 
 from mock import Mock, patch
 
-from superset import db, security, sm
-from superset.connectors.druid.models import (
+from rook import db, security, sm
+from rook.connectors.druid.models import (
     DruidCluster, DruidDatasource,
 )
-from .base_tests import SupersetTestCase
+from .base_tests import RookTestCase
 
 
 class PickableMock(Mock):
@@ -70,7 +70,7 @@ GB_RESULT_SET = [
 ]
 
 
-class DruidTests(SupersetTestCase):
+class DruidTests(RookTestCase):
 
     """Testing interactions with Druid"""
 
@@ -87,7 +87,7 @@ class DruidTests(SupersetTestCase):
             broker_port=7980,
             metadata_last_refreshed=datetime.now())
 
-    @patch('superset.connectors.druid.models.PyDruid')
+    @patch('rook.connectors.druid.models.PyDruid')
     def test_client(self, PyDruid):
         self.login(username='admin')
         instance = PyDruid.return_value
@@ -125,7 +125,7 @@ class DruidTests(SupersetTestCase):
         instance.query_dict = {}
         instance.query_builder.last_query.query_dict = {}
 
-        resp = self.get_resp('/superset/explore/druid/{}/'.format(
+        resp = self.get_resp('/rook/explore/druid/{}/'.format(
             datasource_id))
         self.assertIn('test_datasource', resp)
         form_data = {
@@ -141,7 +141,7 @@ class DruidTests(SupersetTestCase):
             'force': 'true',
         }
         # One groupby
-        url = ('/superset/explore_json/druid/{}/'.format(datasource_id))
+        url = ('/rook/explore_json/druid/{}/'.format(datasource_id))
         resp = self.get_json_resp(url, {'form_data': json.dumps(form_data)})
         self.assertEqual('Canada', resp['data']['records'][0]['dim1'])
 
@@ -158,7 +158,7 @@ class DruidTests(SupersetTestCase):
             'force': 'true',
         }
         # two groupby
-        url = ('/superset/explore_json/druid/{}/'.format(datasource_id))
+        url = ('/rook/explore_json/druid/{}/'.format(datasource_id))
         resp = self.get_json_resp(url, {'form_data': json.dumps(form_data)})
         self.assertEqual('Canada', resp['data']['records'][0]['dim1'])
 
@@ -202,7 +202,7 @@ class DruidTests(SupersetTestCase):
         }
 
         def check():
-            resp = self.client.post('/superset/sync_druid/', data=json.dumps(cfg))
+            resp = self.client.post('/rook/sync_druid/', data=json.dumps(cfg))
             druid_ds = (
                 db.session
                 .query(DruidDatasource)
@@ -232,7 +232,7 @@ class DruidTests(SupersetTestCase):
                 ],
             },
         }
-        resp = self.client.post('/superset/sync_druid/', data=json.dumps(cfg))
+        resp = self.client.post('/rook/sync_druid/', data=json.dumps(cfg))
         druid_ds = db.session.query(DruidDatasource).filter_by(
             datasource_name='test_click').one()
         # columns and metrics are not deleted if config is changed as
@@ -281,7 +281,7 @@ class DruidTests(SupersetTestCase):
         self.assertIn('datasource_for_gamma', resp)
         self.assertNotIn('datasource_not_for_gamma', resp)
 
-    @patch('superset.connectors.druid.models.PyDruid')
+    @patch('rook.connectors.druid.models.PyDruid')
     def test_sync_druid_perm(self, PyDruid):
         self.login(username='admin')
         instance = PyDruid.return_value

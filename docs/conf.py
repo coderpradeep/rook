@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# superset documentation build configuration file, created by
+# rook documentation build configuration file, created by
 # sphinx-quickstart on Thu Dec 17 15:42:06 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -51,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = "Apache Superset"
+project = "Apache Rook"
 copyright = None
 author = u'Maxime Beauchemin'
 
@@ -206,7 +206,7 @@ html_show_copyright = False
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'supersetdoc'
+htmlhelp_basename = 'rookdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -228,7 +228,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'superset.tex', u'Superset Documentation',
+  (master_doc, 'rook.tex', u'Rook Documentation',
    u'Maxime Beauchemin', 'manual'),
 ]
 
@@ -258,7 +258,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'Superset', u'superset Documentation',
+    (master_doc, 'Rook', u'rook Documentation',
      [author], 1)
 ]
 
@@ -272,8 +272,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'Superset', u'Superset Documentation',
-   author, 'Superset', 'One line description of project.',
+  (master_doc, 'Rook', u'Rook Documentation',
+   author, 'Rook', 'One line description of project.',
    'Miscellaneous'),
 ]
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset Celery worker"""
+"""Unit tests for Rook Celery worker"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -14,12 +14,12 @@ import unittest
 import pandas as pd
 from past.builtins import basestring
 
-from superset import app, appbuilder, cli, dataframe, db
-from superset.models.helpers import QueryStatus
-from superset.models.sql_lab import Query
-from superset.security import sync_role_definitions
-from superset.sql_parse import SupersetQuery
-from .base_tests import SupersetTestCase
+from rook import app, appbuilder, cli, dataframe, db
+from rook.models.helpers import QueryStatus
+from rook.models.sql_lab import Query
+from rook.security import sync_role_definitions
+from rook.sql_parse import RookQuery
+from .base_tests import RookTestCase
 
 
 BASE_DIR = app.config.get('BASE_DIR')
@@ -27,7 +27,7 @@ BASE_DIR = app.config.get('BASE_DIR')
 
 class CeleryConfig(object):
     BROKER_URL = 'sqla+sqlite:///' + app.config.get('SQL_CELERY_DB_FILE_PATH')
-    CELERY_IMPORTS = ('superset.sql_lab', )
+    CELERY_IMPORTS = ('rook.sql_lab', )
     CELERY_RESULT_BACKEND = (
         'db+sqlite:///' + app.config.get('SQL_CELERY_RESULTS_DB_FILE_PATH'))
     CELERY_ANNOTATIONS = {'sql_lab.add': {'rate_limit': '10/s'}}
@@ -37,11 +37,11 @@ class CeleryConfig(object):
 app.config['CELERY_CONFIG'] = CeleryConfig
 
 
-class UtilityFunctionTests(SupersetTestCase):
+class UtilityFunctionTests(RookTestCase):
 
     # TODO(bkyryliuk): support more cases in CTA function.
     def test_create_table_as(self):
-        q = SupersetQuery('SELECT * FROM outer_space;')
+        q = RookQuery('SELECT * FROM outer_space;')
 
         self.assertEqual(
             'CREATE TABLE tmp AS \nSELECT * FROM outer_space',
@@ -53,7 +53,7 @@ class UtilityFunctionTests(SupersetTestCase):
             q.as_create_table('tmp', overwrite=True))
 
         # now without a semicolon
-        q = SupersetQuery('SELECT * FROM outer_space')
+        q = RookQuery('SELECT * FROM outer_space')
         self.assertEqual(
             'CREATE TABLE tmp AS \nSELECT * FROM outer_space',
             q.as_create_table('tmp'))
@@ -62,7 +62,7 @@ class UtilityFunctionTests(SupersetTestCase):
         multi_line_query = (
             'SELECT * FROM planets WHERE\n'
             "Luke_Father = 'Darth Vader'")
-        q = SupersetQuery(multi_line_query)
+        q = RookQuery(multi_line_query)
         self.assertEqual(
             'CREATE TABLE tmp AS \nSELECT * FROM planets WHERE\n'
             "Luke_Father = 'Darth Vader'",
@@ -70,7 +70,7 @@ class UtilityFunctionTests(SupersetTestCase):
         )
 
 
-class CeleryTestCase(SupersetTestCase):
+class CeleryTestCase(RookTestCase):
     def __init__(self, *args, **kwargs):
         super(CeleryTestCase, self).__init__(*args, **kwargs)
         self.client = app.test_client()
@@ -100,7 +100,7 @@ class CeleryTestCase(SupersetTestCase):
 
         sync_role_definitions()
 
-        worker_command = BASE_DIR + '/bin/superset worker'
+        worker_command = BASE_DIR + '/bin/rook worker'
         subprocess.Popen(
             worker_command, shell=True, stdout=subprocess.PIPE)
 
@@ -119,7 +119,7 @@ class CeleryTestCase(SupersetTestCase):
             shell=True,
         )
         subprocess.call(
-            "ps auxww | grep 'superset worker' | awk '{print $2}' | xargs kill -9",
+            "ps auxww | grep 'rook worker' | awk '{print $2}' | xargs kill -9",
             shell=True,
         )
 
@@ -127,7 +127,7 @@ class CeleryTestCase(SupersetTestCase):
                 async='false'):
         self.login()
         resp = self.client.post(
-            '/superset/sql_json/',
+            '/rook/sql_json/',
             data=dict(
                 database_id=db_id,
                 sql=sql,
@@ -255,7 +255,7 @@ class CeleryTestCase(SupersetTestCase):
     def test_get_columns(self):
         main_db = self.get_main_database(db.session)
         df = main_db.get_df('SELECT * FROM multiformat_time_series', None)
-        cdf = dataframe.SupersetDataFrame(df)
+        cdf = dataframe.RookDataFrame(df)
 
         # Making ordering non-deterministic
         cols = self.dictify_list_of_dicts(cdf.columns, 'name')

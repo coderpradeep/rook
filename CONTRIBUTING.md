@@ -33,8 +33,8 @@ Look through the GitHub issues for features. Anything tagged with
 
 ### Documentation
 
-Superset could always use better documentation,
-whether as part of the official Superset docs,
+Rook could always use better documentation,
+whether as part of the official Rook docs,
 in docstrings, `docs/*.rst` or even on the web as blog posts or
 articles.
 
@@ -52,7 +52,7 @@ If you are proposing a feature:
     
 ### Questions
 
-There is a dedicated [tag](https://stackoverflow.com/questions/tagged/apache-superset) on [stackoverflow](https://stackoverflow.com/). Please use it when asking questions.
+There is a dedicated [tag](https://stackoverflow.com/questions/tagged/apache-rook) on [stackoverflow](https://stackoverflow.com/). Please use it when asking questions.
 
 ## Pull Request Guidelines
 
@@ -74,7 +74,7 @@ meets these guidelines:
 
 ## Documentation
 
-The latest documentation and tutorial are available [here](https://superset.incubator.apache.org/).
+The latest documentation and tutorial are available [here](https://rook.incubator.apache.org/).
 
 Contributing to the official documentation is relatively easy, once you've setup
 your environment and done an edit end-to-end. The docs can be found in the
@@ -82,26 +82,26 @@ your environment and done an edit end-to-end. The docs can be found in the
 [reStructuredText format](https://en.wikipedia.org/wiki/ReStructuredText) (.rst).
 If you've written Markdown before, you'll find the reStructuredText format familiar.
 
-Superset uses [Sphinx](http://www.sphinx-doc.org/en/1.5.1/) to convert the rst files
+Rook uses [Sphinx](http://www.sphinx-doc.org/en/1.5.1/) to convert the rst files
 in `docs/` to the final HTML output users see.
 
 Before you start changing the docs, you'll want to
-[fork the Superset project on Github](https://help.github.com/articles/fork-a-repo/).
+[fork the Rook project on Github](https://help.github.com/articles/fork-a-repo/).
 Once that new repository has been created, clone it on your local machine:
 
-    git clone git@github.com:your_username/incubator-superset.git
+    git clone git@github.com:your_username/incubator-rook.git
 
 At this point, you may also want to create a
 [Python virtual environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
 to manage the Python packages you're about to install:
 
-    virtualenv superset-dev
-    source superset-dev/bin/activate
+    virtualenv rook-dev
+    source rook-dev/bin/activate
 
 Finally, to make changes to the rst files and build the docs using Sphinx, 
 you'll need to install a handful of dependencies from the repo you cloned:
 
-    cd incubator-superset
+    cd incubator-rook
     pip install -r dev-reqs-for-docs.txt
 
 To get the feel for how to edit and build the docs, let's edit a file, build
@@ -116,7 +116,7 @@ Now, go ahead and edit one of the files under `docs/`, say `docs/tutorial.rst`
 [ReStructuredText Primer](http://docutils.sourceforge.net/docs/user/rst/quickstart.html)
 for a reference on the formatting of the rst files.
 
-Once you've made your changes, run this command from the root of the Superset
+Once you've made your changes, run this command from the root of the Rook
 repo to convert the docs into HTML:
 
     python setup.py build_sphinx
@@ -147,14 +147,14 @@ referenced in the rst, e.g.
     .. image:: _static/img/tutorial/tutorial_01_sources_database.png
 
 aren't actually included in that directory. _Instead_, you'll want to add and commit
-images (and any other static assets) to the _superset/assets/images_ directory.
-When the docs are being pushed to [Apache Superset (incubating)](https://superset.incubator.apache.org/), images
+images (and any other static assets) to the _rook/assets/images_ directory.
+When the docs are being pushed to [Apache Rook (incubating)](https://rook.incubator.apache.org/), images
 will be moved from there to the _\_static/img_ directory, just like they're referenced
 in the docs.
 
 For example, the image referenced above actually lives in
 
-    superset/assets/images/tutorial
+    rook/assets/images/tutorial
 
 Since the image is moved during the documentation build process, the docs reference the
 image in
@@ -165,12 +165,12 @@ instead.
 
 ## Setting up a Python development environment
 
-Check the [OS dependencies](https://superset.incubator.apache.org/installation.html#os-dependencies) before follows these steps.
+Check the [OS dependencies](https://rook.incubator.apache.org/installation.html#os-dependencies) before follows these steps.
 
     # fork the repo on GitHub and then clone it
     # alternatively you may want to clone the main repo but that won't work
     # so well if you are planning on sending PRs
-    # git clone git@github.com:apache/incubator-superset.git
+    # git clone git@github.com:apache/incubator-rook.git
 
     # [optional] setup a virtual env and activate it
     virtualenv env
@@ -180,24 +180,24 @@ Check the [OS dependencies](https://superset.incubator.apache.org/installation.h
     pip install -e .
 
     # Create an admin user
-    fabmanager create-admin --app superset
+    fabmanager create-admin --app rook
 
     # Initialize the database
-    superset db upgrade
+    rook db upgrade
 
     # Create default roles and permissions
-    superset init
+    rook init
 
     # Load some data to play with
-    superset load_examples
+    rook load_examples
 
     # start a dev web server
-    superset runserver -d
+    rook runserver -d
 
 
 ## Setting up the node / npm javascript environment
 
-`superset/assets` contains all npm-managed, front end assets.
+`rook/assets` contains all npm-managed, front end assets.
 Flask-Appbuilder itself comes bundled with jQuery and bootstrap.
 While these may be phased out over time, these packages are currently not
 managed with npm.
@@ -224,19 +224,19 @@ export PATH="$HOME/.npm-packages/bin:$PATH"
 
 #### npm packages
 To install third party libraries defined in `package.json`, run the
-following within the `superset/assets/` directory which will install them in a
+following within the `rook/assets/` directory which will install them in a
 new `node_modules/` folder within `assets/`.
 
 ```bash
 # from the root of the repository, move to where our JS package.json lives
-cd superset/assets/
+cd rook/assets/
 # install yarn, a replacement for `npm install` that is faster and more deterministic
 npm install -g yarn
 # run yarn to fetch all the dependencies
 yarn
 ```
 
-To parse and generate bundled files for superset, run either of the
+To parse and generate bundled files for rook, run either of the
 following commands. The `dev` flag will keep the npm script running and
 re-run it upon any changes within the assets directory.
 
@@ -255,7 +255,7 @@ For every development session you will have to start a flask dev server
 as well as an npm watcher
 
 ```
-superset runserver -d -p 8081
+rook runserver -d -p 8081
 npm run dev
 ```
 
@@ -278,7 +278,7 @@ Note that before running specific tests, you have to both setup the local testin
 
 We use [Mocha](https://mochajs.org/), [Chai](http://chaijs.com/) and [Enzyme](http://airbnb.io/enzyme/) to test Javascript. Tests can be run with:
 
-    cd /superset/superset/assets/javascripts
+    cd /rook/rook/assets/javascripts
     npm i
     npm run test
 
@@ -293,7 +293,7 @@ Lint the project with:
     npm run lint
 
 ## Linting with codeclimate
-Codeclimate is a service we use to measure code quality and test coverage. To get codeclimate's report on your branch, ideally before sending your PR, you can setup codeclimate against your Superset fork. After you push to your fork, you should be able to get the report at http://codeclimate.com . Alternatively, if you prefer to work locally, you can install the codeclimate cli tool.
+Codeclimate is a service we use to measure code quality and test coverage. To get codeclimate's report on your branch, ideally before sending your PR, you can setup codeclimate against your Rook fork. After you push to your fork, you should be able to get the report at http://codeclimate.com . Alternatively, if you prefer to work locally, you can install the codeclimate cli tool.
 
 *Install the codeclimate cli tool*
 ```
@@ -323,27 +323,27 @@ Generate the documentation with:
     cd docs && ./build.sh
 
 ## CSS Themes
-As part of the npm build process, CSS for Superset is compiled from `Less`, a dynamic stylesheet language.
+As part of the npm build process, CSS for Rook is compiled from `Less`, a dynamic stylesheet language.
 
-It's possible to customize or add your own theme to Superset, either by overriding CSS rules or preferably
+It's possible to customize or add your own theme to Rook, either by overriding CSS rules or preferably
 by modifying the Less variables or files in `assets/stylesheets/less/`.
 
-The `variables.less` and `bootswatch.less` files that ship with Superset are derived from
+The `variables.less` and `bootswatch.less` files that ship with Rook are derived from
 [Bootswatch](https://bootswatch.com) and thus extend Bootstrap. Modify variables in these files directly, or
 swap them out entirely with the equivalent files from other Bootswatch (themes)[https://github.com/thomaspark/bootswatch.git]
 
 ## Translations
 
-We use [Babel](http://babel.pocoo.org/en/latest/) to translate Superset. The
+We use [Babel](http://babel.pocoo.org/en/latest/) to translate Rook. The
 key is to instrument the strings that need translation using
 `from flask_babel import lazy_gettext as _`. Once this is imported in
 a module, all you have to do is to `_("Wrap your strings")` using the
 underscore `_` "function".
 
-We use `import {t, tn, TCT} from locales;` in js, JSX file, locales is in `./superset/assets/javascripts/` directory.
+We use `import {t, tn, TCT} from locales;` in js, JSX file, locales is in `./rook/assets/javascripts/` directory.
 
 To enable changing language in your environment, you can simply add the
-`LANGUAGES` parameter to your `superset_config.py`. Having more than one
+`LANGUAGES` parameter to your `rook_config.py`. Having more than one
 options here will add a language selection dropdown on the right side of the
 navigation bar.
 
@@ -357,18 +357,18 @@ As per the [Flask AppBuilder documentation] about translation, to create a
 new language dictionary, run the following command (where `es` is replaced with
 the language code for your target language):
 
-    pybabel init -i superset/translations/messages.pot -d superset/translations -l es
+    pybabel init -i rook/translations/messages.pot -d rook/translations -l es
 
 Then it's a matter of running the statement below to gather all strings that
 need translation
 
-    fabmanager babel-extract --target superset/translations/ --output superset/translations/messages.pot --config superset/translations/babel.cfg -k _ -k __ -k t -k tn -k tct
+    fabmanager babel-extract --target rook/translations/ --output rook/translations/messages.pot --config rook/translations/babel.cfg -k _ -k __ -k t -k tn -k tct
 
 You can then translate the strings gathered in files located under
-`superset/translation`, where there's one per language. For the translations
+`rook/translation`, where there's one per language. For the translations
 to take effect, they need to be compiled using this command:
 
-    fabmanager babel-compile --target superset/translations/
+    fabmanager babel-compile --target rook/translations/
 
 In the case of JS translation, we need to convert the PO file into a JSON file, and we need the global download of the npm package po2json.
 We need to be compiled using this command:
@@ -377,7 +377,7 @@ We need to be compiled using this command:
 
 Execute this command to convert the en PO file into a json file:
 
-    po2json -d superset -f jed1.x superset/translations/en/LC_MESSAGES/messages.po superset/translations/en/LC_MESSAGES/messages.json
+    po2json -d rook -f jed1.x rook/translations/en/LC_MESSAGES/messages.po rook/translations/en/LC_MESSAGES/messages.json
 
 If you get errors running `po2json`, you might be running the ubuntu package with the same
 name rather than the nodejs package (they have a different format for the arguments). You
@@ -386,7 +386,7 @@ directly at `/usr/local/bin/po2json` rather than just `po2json`.
 
 ## Adding new datasources
 
-1. Create Models and Views for the datasource, add them under superset folder, like a new my_models.py
+1. Create Models and Views for the datasource, add them under rook folder, like a new my_models.py
     with models for cluster, datasources, columns and metrics and my_views.py with clustermodelview
     and datasourcemodelview.
 
@@ -396,15 +396,15 @@ directly at `/usr/local/bin/po2json` rather than just `po2json`.
 
     For example:
 
-    `ADDITIONAL_MODULE_DS_MAP = {'superset.my_models': ['MyDatasource', 'MyOtherDatasource']}`
+    `ADDITIONAL_MODULE_DS_MAP = {'rook.my_models': ['MyDatasource', 'MyOtherDatasource']}`
 
-    This means it'll register MyDatasource and MyOtherDatasource in superset.my_models module in the source registry.
+    This means it'll register MyDatasource and MyOtherDatasource in rook.my_models module in the source registry.
 
 ## Creating a new visualization type
 
 Here's an example as a Github PR with comments that describe what the
 different sections of the code do:
-https://github.com/apache/incubator-superset/pull/3013
+https://github.com/apache/incubator-rook/pull/3013
 
 ## Refresh documentation website
 
@@ -420,17 +420,17 @@ https://github.com/apache/incubator-superset/pull/3013
     python setup.py build_sphinx
 
     # copy html files to temp folder
-    cp -r docs/_build/html/ /tmp/tmp_superset_docs/
+    cp -r docs/_build/html/ /tmp/tmp_rook_docs/
 
     # clone the docs repo
     cd ~/
-    git clone https://git-wip-us.apache.org/repos/asf/incubator-superset-site.git
+    git clone https://git-wip-us.apache.org/repos/asf/incubator-rook-site.git
 
     # copy
-    cp -r /tmp/tmp_superset_docs/ ~/incubator-superset-site.git/
+    cp -r /tmp/tmp_rook_docs/ ~/incubator-rook-site.git/
  
     # commit and push to `asf-site` branch
-    cd ~/incubator-superset-site.git/
+    cd ~/incubator-rook-site.git/
     git checkout asf-site
     git add .
     git commit -a -m "New doc version"

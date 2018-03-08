@@ -1,0 +1,104 @@
+
+#Enter Target Directory name in lower case
+TARGET_DIR="rook"
+
+DIRR="${TARGET_DIR^}"
+
+if [ ! "$1" = "env_created" ]
+then
+
+	#Creating Virtual Environment
+	virtualenv env
+	source env/bin/activate
+
+	#Setting up Develpmwnt Environment
+	python setup.py develop
+
+	cd superset/assets
+
+	# Initialize the database
+	superset db upgrade
+
+	# Load some data to play with
+	superset load_examples
+
+	# Create default roles and permissions
+	superset init
+
+	#Installing yarn
+	npm install -g yarn
+	yarn
+
+	#Running Developement Environment for 90 seconds
+	timeout 90s npm run dev
+fi
+
+#Redirecting to Parent Dir
+cd ../..
+
+#Deactivating env
+deactivate
+
+sudo find . -name \*.jsx -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.yml -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.md -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.c -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.py* -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.txt -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.ini -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.sh -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.cfg -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.html -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.css -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.js -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+sudo find . -name \*.in -exec sed -i "s/superset/$TARGET_DIR/g" {} \;
+
+
+sudo find . -name \*.jsx -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.yml -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.md -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.c -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.py* -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.txt -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.ini -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.sh -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.cfg -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.html -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.css -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.js -exec sed -i "s/Superset/$DIRR/g" {} \;
+sudo find . -name \*.in -exec sed -i "s/Superset/$DIRR/g" {} \;
+
+
+# Rename 3 Folders and 1 File
+sudo mv superset/templates/superset superset/templates/$TARGET_DIR
+sudo sed -i "s/superset/$TARGET_DIR/g" superset/bin/superset
+sudo mv superset/bin/superset superset/bin/$TARGET_DIR
+sudo mv superset/assets/stylesheets/superset.less superset/assets/stylesheets/$TARGET_DIR.less
+sudo mv superset $TARGET_DIR
+sudo sed -i "s/modules\/$TARGET_DIR/modules\/superset/g" $TARGET_DIR/assets/javascripts/dashboard/Dashboard.jsx
+
+#Activating Environment
+source env/bin/activate
+
+#Setting up Develpmwnt Environment
+python setup.py develop
+
+cd $TARGET_DIR/assets
+
+# Initialize the database
+$TARGET_DIR db upgrade
+
+# Create default roles and permissions
+$TARGET_DIR init
+
+#Installing yarn
+npm install -g yarn
+yarn
+
+#Running Developement Environment for 90 seconds
+timeout 90s npm run dev
+
+# Create an admin user (you will be prompted to set username, first and last name before setting a password)
+echo "Creating Admin for $TARGET_DIR"
+fabmanager create-admin --app $TARGET_DIR
+
