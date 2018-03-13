@@ -47,7 +47,7 @@ SUPERSET_CELERY_WORKERS = 32
 
 SUPERSET_WEBSERVER_ADDRESS = '0.0.0.0'
 SUPERSET_WEBSERVER_PORT = 8088
-SUPERSET_WEBSERVER_TIMEOUT = 60
+SUPERSET_WEBSERVER_TIMEOUT = 120
 EMAIL_NOTIFICATIONS = False
 CUSTOM_SECURITY_MANAGER = None
 SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -181,8 +181,18 @@ IMG_UPLOAD_URL = '/static/uploads/'
 # IMG_SIZE = (300, 200, True)
 
 CACHE_DEFAULT_TIMEOUT = 60 * 60 * 24
-CACHE_CONFIG = {'CACHE_TYPE': 'null'}
-TABLE_NAMES_CACHE_CONFIG = {'CACHE_TYPE': 'null'}
+CACHE_CONFIG = {'CACHE_TYPE': 'redis',
+     'key_prefix':'superset_results',
+     'CACHE_REDIS_HOST': 'localhost', 
+     'CACHE_REDIS_PORT': '6379',
+     'CACHE_REDIS_URL': 'redis://root@localhost:6379'}
+
+TABLE_NAMES_CACHE_CONFIG ={'CACHE_TYPE': 'redis',
+     'key_prefix':'superset_results',
+     'CACHE_REDIS_HOST': 'localhost', 
+     'CACHE_REDIS_PORT': '6379',
+     'CACHE_REDIS_URL': 'redis://root@localhost:6379'}
+
 
 # CORS Options
 ENABLE_CORS = False
@@ -245,8 +255,7 @@ INTERVAL = 1
 BACKUP_COUNT = 30
 
 # Set this API key to enable Mapbox visualizations
-MAPBOX_API_KEY = 'pk.eyJ1Ijoicm9vay10ZWNobmljYWwiLCJhIjoiY2plbWhodDhsMDc0cDJ3cXdjN2FhOGd2NCJ9.hmw4kRpKWV8WuPOhvD3wDQ
-'
+MAPBOX_API_KEY = 'pk.eyJ1Ijoicm9vay10ZWNobmljYWwiLCJhIjoiY2plbWhodDhsMDc0cDJ3cXdjN2FhOGd2NCJ9.hmw4kRpKWV8WuPOhvD3wDQ'
 
 # Maximum number of rows returned in the SQL editor
 SQL_MAX_ROW = 1000000

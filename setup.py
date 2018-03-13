@@ -90,6 +90,7 @@ setup(
         'unidecode>=0.04.21',
         'unicodecsv==0.14.1',
         'bleach==2.1.2',
+        'redis>=2.10.6',
     ],
     extras_require={
         'cors': ['Flask-Cors>=2.0.0'],
