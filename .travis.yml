@@ -16,10 +16,10 @@ env:
     - TOX_ENV=py27-mysql
     - TOX_ENV=py27-sqlite
 before_script:
-  - mysql -u root -e "DROP DATABASE IF EXISTS superset; CREATE DATABASE superset DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci"
+  - mysql -u root -e "DROP DATABASE IF EXISTS kato; CREATE DATABASE kato DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci"
   - mysql -u root -e "CREATE USER 'mysqluser'@'localhost' IDENTIFIED BY 'mysqluserpassword';"
-  - mysql -u root -e "GRANT ALL ON superset.* TO 'mysqluser'@'localhost';"
-  - psql -U postgres -c "CREATE DATABASE superset;"
+  - mysql -u root -e "GRANT ALL ON kato.* TO 'mysqluser'@'localhost';"
+  - psql -U postgres -c "CREATE DATABASE kato;"
   - psql -U postgres -c "CREATE USER postgresuser WITH PASSWORD 'pguserpassword';"
   - export PATH=${PATH}:/tmp/hive/bin
 install:

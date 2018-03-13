@@ -1,2 +1,2 @@
 #!/bin/bash
-pylint superset --errors-only
+pylint kato --errors-only

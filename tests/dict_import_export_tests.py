@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset"""
+"""Unit tests for Kato"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -10,19 +10,19 @@ import unittest
 
 import yaml
 
-from superset import db
-from superset.connectors.druid.models import (
+from kato import db
+from kato.connectors.druid.models import (
     DruidColumn, DruidDatasource, DruidMetric,
 )
-from superset.connectors.sqla.models import SqlaTable, SqlMetric, TableColumn
-from .base_tests import SupersetTestCase
+from kato.connectors.sqla.models import SqlaTable, SqlMetric, TableColumn
+from .base_tests import KatoTestCase
 
 DBREF = 'dict_import__export_test'
 NAME_PREFIX = 'dict_'
 ID_PREFIX = 20000
 
 
-class DictImportExportTests(SupersetTestCase):
+class DictImportExportTests(KatoTestCase):
     """Testing export import functionality for dashboards"""
 
     def __init__(self, *args, **kwargs):

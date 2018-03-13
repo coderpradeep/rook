@@ -12,8 +12,8 @@ import uuid
 from mock import patch
 import numpy
 
-from superset.exceptions import SupersetException
-from superset.utils import (
+from kato.exceptions import KatoException
+from kato.utils import (
     base_json_conv, datetime_f, json_int_dttm_ser, json_iso_dttm_ser,
     JSONEncodedDict, memoized, merge_extra_filters, merge_request_params,
     parse_human_timedelta, validate_json, zlib_compress, zlib_decompress_to_string,
@@ -51,7 +51,7 @@ class UtilsTestCase(unittest.TestCase):
         assert isinstance(base_json_conv(Decimal('1.0')), float) is True
         assert isinstance(base_json_conv(uuid.uuid4()), str) is True
 
-    @patch('superset.utils.datetime')
+    @patch('kato.utils.datetime')
     def test_parse_human_timedelta(self, mock_now):
         mock_now.return_value = datetime(2016, 12, 1)
         self.assertEquals(parse_human_timedelta('now'), timedelta(0))
@@ -255,7 +255,7 @@ class UtilsTestCase(unittest.TestCase):
 
     def test_validate_json(self):
         invalid = '{"a": 5, "b": [1, 5, ["g", "h]]}'
-        with self.assertRaises(SupersetException):
+        with self.assertRaises(KatoException):
             validate_json(invalid)
 
     def test_memoized_on_functions(self):

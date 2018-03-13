@@ -11,7 +11,7 @@ import subprocess
 from setuptools import find_packages, setup
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-PACKAGE_DIR = os.path.join(BASE_DIR, 'superset', 'static', 'assets')
+PACKAGE_DIR = os.path.join(BASE_DIR, 'kato', 'static', 'assets')
 PACKAGE_FILE = os.path.join(PACKAGE_DIR, 'package.json')
 with open(PACKAGE_FILE) as package_file:
     version_string = json.load(package_file)['version']
@@ -40,7 +40,7 @@ with open(os.path.join(PACKAGE_DIR, 'version_info.json'), 'w') as version_file:
 
 
 setup(
-    name='superset',
+    name='kato',
     description=(
         'A interactive data visualization platform build on SqlAlchemy '
         'and druid.io'),
@@ -48,7 +48,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    scripts=['superset/bin/superset'],
+    scripts=['kato/bin/kato'],
     install_requires=[
         'boto3>=1.4.6',
         'celery==4.1.0',
@@ -102,9 +102,9 @@ setup(
     ],
     author='Maxime Beauchemin',
     author_email='maximebeauchemin@gmail.com',
-    url='https://github.com/apache/incubator-superset',
+    url='https://github.com/apache/incubator-kato',
     download_url=(
-        'https://github.com/apache/incubator-superset/tarball/' + version_string,
+        'https://github.com/apache/incubator-kato/tarball/' + version_string,
     ),
     classifiers=[
         'Programming Language :: Python :: 2.7',

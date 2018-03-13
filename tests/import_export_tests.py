@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for Superset"""
+"""Unit tests for Kato"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -10,16 +10,16 @@ import unittest
 
 from sqlalchemy.orm.session import make_transient
 
-from superset import db, utils
-from superset.connectors.druid.models import (
+from kato import db, utils
+from kato.connectors.druid.models import (
     DruidColumn, DruidDatasource, DruidMetric,
 )
-from superset.connectors.sqla.models import SqlaTable, SqlMetric, TableColumn
-from superset.models import core as models
-from .base_tests import SupersetTestCase
+from kato.connectors.sqla.models import SqlaTable, SqlMetric, TableColumn
+from kato.models import core as models
+from .base_tests import KatoTestCase
 
 
-class ImportExportTests(SupersetTestCase):
+class ImportExportTests(KatoTestCase):
     """Testing export import functionality for dashboards"""
 
     def __init__(self, *args, **kwargs):

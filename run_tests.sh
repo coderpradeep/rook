@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 echo $DB
-rm ~/.superset/unittests.db
-rm ~/.superset/celerydb.sqlite
-rm ~/.superset/celery_results.sqlite
+rm ~/.kato/unittests.db
+rm ~/.kato/celerydb.sqlite
+rm ~/.kato/celery_results.sqlite
 rm -f .coverage
 export PYTHONPATH=./
-export SUPERSET_CONFIG=tests.superset_test_config
+export SUPERSET_CONFIG=tests.kato_test_config
 set -e
-superset/bin/superset db upgrade
-superset/bin/superset version -v
+kato/bin/kato db upgrade
+kato/bin/kato version -v
 python setup.py nosetests

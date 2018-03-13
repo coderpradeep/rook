@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for email service in Superset"""
+"""Unit tests for email service in Kato"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -13,7 +13,7 @@ import unittest
 
 import mock
 
-from superset import app, utils
+from kato import app, utils
 
 send_email_test = mock.Mock()
 
@@ -22,7 +22,7 @@ class EmailSmtpTest(unittest.TestCase):
     def setUp(self):
         app.config['smtp_ssl'] = False
 
-    @mock.patch('superset.utils.send_MIME_email')
+    @mock.patch('kato.utils.send_MIME_email')
     def test_send_smtp(self, mock_send_mime):
         attachment = tempfile.NamedTemporaryFile()
         attachment.write(b'attachment')
@@ -41,7 +41,7 @@ class EmailSmtpTest(unittest.TestCase):
         mimeapp = MIMEApplication('attachment')
         assert msg.get_payload()[-1].get_payload() == mimeapp.get_payload()
 
-    @mock.patch('superset.utils.send_MIME_email')
+    @mock.patch('kato.utils.send_MIME_email')
     def test_send_bcc_smtp(self, mock_send_mime):
         attachment = tempfile.NamedTemporaryFile()
         attachment.write(b'attachment')

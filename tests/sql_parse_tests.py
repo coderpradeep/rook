@@ -6,13 +6,13 @@ from __future__ import unicode_literals
 
 import unittest
 
-from superset import sql_parse
+from kato import sql_parse
 
 
-class SupersetTestCase(unittest.TestCase):
+class KatoTestCase(unittest.TestCase):
 
     def extract_tables(self, query):
-        sq = sql_parse.SupersetQuery(query)
+        sq = sql_parse.KatoQuery(query)
         return sq.tables
 
     def test_simple_select(self):

@@ -10,8 +10,8 @@ import unittest
 from mock import Mock
 import pydruid.utils.postaggregator as postaggs
 
-import superset.connectors.druid.models as models
-from superset.connectors.druid.models import (
+import kato.connectors.druid.models as models
+from kato.connectors.druid.models import (
     DruidColumn, DruidDatasource, DruidMetric,
 )
 
@@ -482,7 +482,7 @@ class DruidFuncTestCase(unittest.TestCase):
     def test_metrics_and_post_aggs(self):
         """
         Test generation of metrics and post-aggregations from an initial list
-        of superset metrics (which may include the results of either). This
+        of kato metrics (which may include the results of either). This
         primarily tests that specifying a post-aggregator metric will also
         require the raw aggregation of the associated druid metric column.
         """
